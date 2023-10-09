@@ -1,5 +1,6 @@
 "use server"
 
+import { formSchema, FormSchemaType } from "@/schemas/form"
 import { currentUser } from "@clerk/nextjs"
 
 import prisma from "@/lib/prisma"
@@ -25,7 +26,7 @@ export async function GetFormStasts() {
 
   let submissionsRate = 0
 
-  if(visits > 0) {
+  if (visits > 0) {
     submissionsRate = (summisions / visits) * 100
   }
 
@@ -37,4 +38,30 @@ export async function GetFormStasts() {
     submissionsRate,
     bounceRate,
   }
+}
+
+export async function CreateForm(data: FormSchemaType) {
+  const validation = formSchema.safeParse(data)
+
+  if (!validation.success) {
+    throw new Error("form not valid")
+  }
+
+  const user = await currentUser()
+  if (!user) {
+    throw new Error("You must be logged in to do this.")
+  }
+
+  const form = await prisma.form.create({
+    data: {
+      ...data,
+      userId: user.id,
+    },
+  })
+
+  if (!form) {
+    throw new Error("form not created")
+  }
+
+  return form.id
 }
