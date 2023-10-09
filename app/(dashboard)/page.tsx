@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
-import CardStartsWrapper from "@/components/ui/CardStartsWrapper"
-import { StatsCards } from "@/components/ui/StastsCard"
+import CardStartsWrapper from "@/components/ui/card-starts-wrapper"
+import { StatsCards } from "@/components/ui/stasts-card"
 
 export default function Home() {
   return (

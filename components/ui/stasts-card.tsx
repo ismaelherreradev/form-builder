@@ -1,8 +1,8 @@
-"use client"
-
 import { GetFormStasts } from "@/actions/form"
-import { Card, CardBody, CardHeader, Skeleton } from "@nextui-org/react"
-import { EyeOpenIcon } from "@radix-ui/react-icons"
+import { Eye } from "lucide-react"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type StatsCardsProps = {
   data?: Awaited<ReturnType<typeof GetFormStasts>>
@@ -25,7 +25,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Total visits"
         value={data?.visits?.toLocaleString() || ""}
-        icon={<EyeOpenIcon />}
+        icon={<Eye />}
         helperText="All time form visits"
         loading={loading}
       />
@@ -33,7 +33,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Total submissions"
         value={data?.summisions?.toLocaleString() || ""}
-        icon={<EyeOpenIcon />}
+        icon={<Eye />}
         helperText="All time form submissions"
         loading={loading}
       />
@@ -41,7 +41,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Submissions rate"
         value={data?.submissionsRate?.toLocaleString() + "%" || ""}
-        icon={<EyeOpenIcon />}
+        icon={<Eye />}
         helperText="Visits that result in form submissions"
         loading={loading}
       />
@@ -49,7 +49,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Bounce rate"
         value={data?.submissionsRate?.toLocaleString() + "%" || ""}
-        icon={<EyeOpenIcon />}
+        icon={<Eye />}
         helperText="Visits that leave without interacting"
         loading={loading}
       />
@@ -63,13 +63,13 @@ export function StatsCard(props: CardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        {title}
+        <CardTitle>{title}</CardTitle>
         {icon}
       </CardHeader>
-      <CardBody>
+      <CardContent>
         <div className="text-2xl font-bold">
           {loading ? (
-            <Skeleton className="rounded-xl ">
+            <Skeleton className="rounded-xl">
               <span className="opacity-0">0</span>
             </Skeleton>
           ) : (
@@ -77,7 +77,7 @@ export function StatsCard(props: CardProps) {
           )}
         </div>
         <p className="text-xs pt-1">{helperText}</p>
-      </CardBody>
+      </CardContent>
     </Card>
   )
 }
