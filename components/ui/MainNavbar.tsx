@@ -9,21 +9,16 @@ import {
   NavbarItem,
 } from "@nextui-org/react"
 
+import DarkModeSwitch from "../ThemeSwitcher"
+
 export default function MainNavbar() {
   return (
     <Navbar as={"nav"} maxWidth="xl">
       <NavbarBrand>
-        <p className="font-bold text-lg">Form Builder</p>
+        {/* <p className="font-bold text-lg">Form Builder</p> */}
       </NavbarBrand>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        <DarkModeSwitch />
       </NavbarContent>
     </Navbar>
   )
