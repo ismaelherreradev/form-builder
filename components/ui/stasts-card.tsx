@@ -1,5 +1,10 @@
 import { GetFormStasts } from "@/actions/form"
-import { Eye } from "lucide-react"
+import {
+  Eye,
+  GanttChartSquare,
+  MousePointerClick,
+  TrendingDown,
+} from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -33,7 +38,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Total submissions"
         value={data?.summisions?.toLocaleString() || ""}
-        icon={<Eye />}
+        icon={<GanttChartSquare />}
         helperText="All time form submissions"
         loading={loading}
       />
@@ -41,7 +46,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Submissions rate"
         value={data?.submissionsRate?.toLocaleString() + "%" || ""}
-        icon={<Eye />}
+        icon={<MousePointerClick />}
         helperText="Visits that result in form submissions"
         loading={loading}
       />
@@ -49,7 +54,7 @@ export function StatsCards(props: StatsCardsProps) {
       <StatsCard
         title="Bounce rate"
         value={data?.submissionsRate?.toLocaleString() + "%" || ""}
-        icon={<Eye />}
+        icon={<TrendingDown />}
         helperText="Visits that leave without interacting"
         loading={loading}
       />
@@ -63,7 +68,9 @@ export function StatsCard(props: CardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
@@ -76,7 +83,7 @@ export function StatsCard(props: CardProps) {
             <>{value}</>
           )}
         </div>
-        <p className="text-xs pt-1">{helperText}</p>
+        <p className="text-xs text-muted-foreground pt-1">{helperText}</p>
       </CardContent>
     </Card>
   )
