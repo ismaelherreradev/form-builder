@@ -65,3 +65,19 @@ export async function CreateForm(data: FormSchemaType) {
 
   return form.id
 }
+
+export async function GetGorms() {
+  const user = await currentUser()
+  if (!user) {
+    throw new Error("You must be logged in to do this.")
+  }
+
+  return await prisma.form.findMany({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  })
+}
