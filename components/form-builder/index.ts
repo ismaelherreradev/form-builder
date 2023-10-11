@@ -1,3 +1,3 @@
-import FormBuilder from "./form-builder"
+import FormBuilder from "./builder"
 
 export default FormBuilder

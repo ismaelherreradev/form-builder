@@ -1,4 +1,15 @@
+import { useDroppable } from "@dnd-kit/core"
+
+import DesignerSidebar from "./sidebar"
+
 export default function Designer() {
+  const droppable = useDroppable({
+    id: "designer-drop-area",
+    data: {
+      isDesignerDropArea: true,
+    },
+  })
+
   return (
     <div className="flex w-full h-full">
       <div className="p-4 w-full">
@@ -8,6 +19,7 @@ export default function Designer() {
           </p>
         </div>
       </div>
+      <DesignerSidebar />
     </div>
   )
 }
