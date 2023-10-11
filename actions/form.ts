@@ -81,3 +81,17 @@ export async function GetGorms() {
     },
   })
 }
+
+export async function GetFormById(id: number) {
+  const user = await currentUser()
+  if (!user) {
+    throw new Error("You must be logged in to do this.")
+  }
+
+  return await prisma.form.findUnique({
+    where: {
+      userId: user.id,
+      id,
+    },
+  })
+}

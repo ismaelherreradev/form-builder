@@ -1,10 +1,11 @@
 import { Suspense } from "react"
 
-import CardStartsWrapper from "@/components/card-starts-wrapper"
 import { Separator } from "@/components/ui/separator"
-import { StatsCards } from "@/components/stasts-card"
+import CardStartsWrapper from "@/components/card-starts-wrapper"
 import CerateFormButton from "@/components/create-form-button"
+import FormCardSkeleton from "@/components/form-card-skeleton"
 import FormCards from "@/components/form-cards"
+import { StatsCards } from "@/components/stasts-card"
 
 export default function Home() {
   return (
@@ -17,7 +18,11 @@ export default function Home() {
       <Separator className="my-6" />
       <div className="grid gric-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <CerateFormButton />
-        <Suspense>
+        <Suspense
+          fallback={[1, 2, 3, 4].map((el) => (
+            <FormCardSkeleton key={el} />
+          ))}
+        >
           <FormCards />
         </Suspense>
       </div>

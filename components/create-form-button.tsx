@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { CreateForm } from "@/actions/form"
 import { formSchema, FormSchemaType } from "@/schemas/form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -30,6 +31,8 @@ import { Textarea } from "./ui/textarea"
 import { toast } from "./ui/use-toast"
 
 export default function CerateFormButton() {
+  const router = useRouter()
+
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
   })
@@ -42,7 +45,7 @@ export default function CerateFormButton() {
         description: "Form created successfully.",
       })
 
-      console.log(formId)
+      router.push(`/builder/${formId}`)
     } catch (error) {
       toast({
         title: "Error",
