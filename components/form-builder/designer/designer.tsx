@@ -1,14 +1,44 @@
-import { useDroppable } from "@dnd-kit/core"
+"use client"
 
-import { cn } from "@/lib/utils"
+import { DragEndEvent, useDndMonitor, useDroppable } from "@dnd-kit/core"
 
+import { cn, idGenerator } from "@/lib/utils"
+
+import {
+  ElementsType,
+  FormElement,
+  FormElementInstance,
+  FormElements,
+} from "../elements"
+import useDesigner from "../hooks/useDesigner"
 import DesignerSidebar from "./sidebar"
 
 export default function Designer() {
+  const { elements, addElement } = useDesigner()
+
   const droppable = useDroppable({
     id: "designer-drop-area",
     data: {
       isDesignerDropArea: true,
+    },
+  })
+
+  useDndMonitor({
+    onDragEnd: (event: DragEndEvent) => {
+      const { active, over } = event
+      if (!active || !over) return
+
+      const isDesignerButtonElement =
+        active.data?.current?.isDesignerButtonElement
+
+      if (isDesignerButtonElement) {
+        const type = active.data?.current?.type
+        const newElement = FormElements[type as ElementsType].construct(
+          idGenerator()
+        )
+
+        addElement(0, newElement)
+      }
     },
   })
 
@@ -22,7 +52,7 @@ export default function Designer() {
             droppable.isOver ? "ring-2 ring-purple-200" : ""
           )}
         >
-          {droppable.isOver ? (
+          {droppable.isOver || elements.length > 0 ? (
             <div className="p-4 w-full">
               <div className="h-[120px] rounded-md bg-purple-200"></div>
             </div>
@@ -31,9 +61,22 @@ export default function Designer() {
               Drop here
             </p>
           )}
+          {elements.length > 0 ? (
+            <div className="flex flex-col texr-has-background w-full gap-2 p-4">
+              {elements.map((element) => (
+                <DesignerElementWrapper key={element.id} element={element} />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
       <DesignerSidebar />
     </div>
   )
+}
+
+function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
+  const DesignerElement = FormElements[element.type].designerComponent
+
+  return <DesignerElement elementInstance={element} />
 }

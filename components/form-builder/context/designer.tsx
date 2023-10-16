@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useState } from "react"
+import { createContext } from "react"
+import { useImmer } from "use-immer"
 
 import { FormElementInstance } from "../elements"
 
@@ -16,10 +17,10 @@ export default function DesignerContextProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [elements, setElements] = useState<FormElementInstance[]>([])
+  const [elements, setElements] = useImmer<FormElementInstance[]>([])
 
   const addElement = (index: number, element: FormElementInstance) => {
-    setElements((elements) => {
+    setElements((elements: FormElementInstance[]) => {
       const newElements = [...elements]
       newElements.splice(index, 0, element)
       return newElements
