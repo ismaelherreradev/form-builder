@@ -1,15 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { FormElements } from "../elements";
+import { X } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+
+import { FormElements } from "../elements"
 import useDesigner from "../hooks/useDesigner"
 
-import { X } from "lucide-react";
-
 export default function PropertiesFormSidebar() {
-  const { selectedElement, setSelectedElement } = useDesigner();
-  if (!selectedElement) return null;
+  const { selectedElement, setSelectedElement } = useDesigner()
+  if (!selectedElement) return null
 
-  const PropertiesForm = FormElements[selectedElement?.type].propertiesComponent;
+  const PropertiesForm = FormElements[selectedElement?.type].propertiesComponent
 
   return (
     <div className="flex flex-col p-2">
@@ -19,7 +20,7 @@ export default function PropertiesFormSidebar() {
           size={"icon"}
           variant={"ghost"}
           onClick={() => {
-            setSelectedElement(null);
+            setSelectedElement(null)
           }}
         >
           <X />
@@ -28,5 +29,5 @@ export default function PropertiesFormSidebar() {
       <Separator className="mb-4" />
       <PropertiesForm elementInstance={selectedElement} />
     </div>
-  );
+  )
 }

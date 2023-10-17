@@ -5,7 +5,7 @@ import CardStartsWrapper from "@/components/card-starts-wrapper"
 import CerateFormButton from "@/components/create-form-button"
 import FormCardSkeleton from "@/components/form-card-skeleton"
 import FormCards from "@/components/form-cards"
-import { StatsCards } from "@/components/stasts-card"
+import { StatsCards } from "@/components/stats-card"
 
 export default function Home() {
   return (

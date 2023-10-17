@@ -1,5 +1,6 @@
 import { GetFormStats } from "@/actions/form"
-import { StatsCards } from "./stasts-card"
+
+import { StatsCards } from "./stats-card"
 
 export default async function CardStartsWrapper() {
   const stast = await GetFormStats()

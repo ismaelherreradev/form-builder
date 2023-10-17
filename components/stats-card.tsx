@@ -53,7 +53,7 @@ export function StatsCards(props: StatsCardsProps) {
 
       <StatsCard
         title="Bounce rate"
-        value={data?.submissionRate?.toLocaleString() + "%" || ""}
+        value={data?.bounceRate?.toLocaleString() + "%" || ""}
         icon={<TrendingDown />}
         helperText="Visits that leave without interacting"
         loading={loading}

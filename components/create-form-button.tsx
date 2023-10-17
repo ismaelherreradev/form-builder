@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { CreateForm } from "@/actions/form"
-import { formSchema, FormSchemaType } from "@/schemas/form"
+import { FormSchema, FormSchemaType } from "@/schemas/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FilePlus2, Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -34,7 +34,7 @@ export default function CerateFormButton() {
   const router = useRouter()
 
   const form = useForm<FormSchemaType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(FormSchema),
   })
 
   async function onSubmit(values: FormSchemaType) {

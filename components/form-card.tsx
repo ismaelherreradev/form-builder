@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Form } from "@prisma/client"
 import { formatDistance } from "date-fns"
-import { EyeIcon, GanttChartSquare, Pencil, ArrowRightIcon } from "lucide-react"
+import { ArrowRightIcon, EyeIcon, GanttChartSquare, Pencil } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 
