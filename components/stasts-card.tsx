@@ -1,4 +1,4 @@
-import { GetFormStasts } from "@/actions/form"
+import { GetFormStats } from "@/actions/form"
 import {
   Eye,
   GanttChartSquare,
@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 type StatsCardsProps = {
-  data?: Awaited<ReturnType<typeof GetFormStasts>>
+  data?: Awaited<ReturnType<typeof GetFormStats>>
   loading: boolean
 }
 
@@ -37,7 +37,7 @@ export function StatsCards(props: StatsCardsProps) {
 
       <StatsCard
         title="Total submissions"
-        value={data?.summisions?.toLocaleString() || ""}
+        value={data?.submissions?.toLocaleString() || ""}
         icon={<GanttChartSquare />}
         helperText="All time form submissions"
         loading={loading}
@@ -45,7 +45,7 @@ export function StatsCards(props: StatsCardsProps) {
 
       <StatsCard
         title="Submissions rate"
-        value={data?.submissionsRate?.toLocaleString() + "%" || ""}
+        value={data?.submissionRate?.toLocaleString() + "%" || ""}
         icon={<MousePointerClick />}
         helperText="Visits that result in form submissions"
         loading={loading}
@@ -53,7 +53,7 @@ export function StatsCards(props: StatsCardsProps) {
 
       <StatsCard
         title="Bounce rate"
-        value={data?.submissionsRate?.toLocaleString() + "%" || ""}
+        value={data?.submissionRate?.toLocaleString() + "%" || ""}
         icon={<TrendingDown />}
         helperText="Visits that leave without interacting"
         loading={loading}

@@ -1,9 +1,9 @@
-import { GetGorms } from "@/actions/form"
+import { GetForms } from "@/actions/form"
 
 import FormCard from "./form-card"
 
 export default async function FormCards() {
-  const forms = await GetGorms()
+  const forms = await GetForms()
   return (
     <>
       {forms.map((form) => (

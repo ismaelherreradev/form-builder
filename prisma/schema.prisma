@@ -23,13 +23,13 @@ model Form {
   visits      Int @default(0)
   submissions Int @default(0)
 
-  sharedURL      String           @default("")
-  FormSubmission FormSubmission[]
+  shareURL        String            @unique @default(uuid())
+  FormSubmissions FormSubmissions[]
 
   @@unique([name, userId])
 }
 
-model FormSubmission {
+model FormSubmissions {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   formId    Int
