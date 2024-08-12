@@ -1,7 +1,7 @@
 "use server"
 
 import { FormSchema, FormSchemaType } from "@/schemas/form"
-import { currentUser } from "@clerk/nextjs"
+import { currentUser } from "@clerk/nextjs/server"
 
 import prisma from "@/lib/prisma"
 
@@ -10,7 +10,7 @@ class UserNotFoundErr extends Error {}
 export async function GetFormStats() {
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   const stats = await prisma.form.aggregate({
@@ -50,7 +50,7 @@ export async function CreateForm(data: FormSchemaType) {
 
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   const { name, description } = data
@@ -73,7 +73,7 @@ export async function CreateForm(data: FormSchemaType) {
 export async function GetForms() {
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   return await prisma.form.findMany({
@@ -89,7 +89,7 @@ export async function GetForms() {
 export async function GetFormById(id: number) {
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   return await prisma.form.findUnique({
@@ -103,7 +103,7 @@ export async function GetFormById(id: number) {
 export async function UpdateFormContent(id: number, jsonContent: string) {
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   return await prisma.form.update({
@@ -120,7 +120,7 @@ export async function UpdateFormContent(id: number, jsonContent: string) {
 export async function PublishForm(id: number) {
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   return await prisma.form.update({
@@ -172,7 +172,7 @@ export async function SubmitForm(formUrl: string, content: string) {
 export async function GetFormWithSubmissions(id: number) {
   const user = await currentUser()
   if (!user) {
-    throw new UserNotFoundErr()
+    return
   }
 
   return await prisma.form.findUnique({
