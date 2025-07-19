@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { CheckSquare } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckSquare } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { cn } from "@/lib/utils"
-import { Checkbox } from "@/components/ui/checkbox"
+import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -16,32 +16,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
   SubmitFunction,
-} from "../elements"
-import useDesigner from "../hooks/useDesigner"
+} from "../elements";
+import useDesigner from "../hooks/useDesigner";
 
-const type: ElementsType = "CheckboxField"
+const type: ElementsType = "CheckboxField";
 
 const extraAttributes = {
   label: "Checkbox field",
   helperText: "Helper text",
   required: false,
-}
+};
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
-  required: z.boolean().default(false),
-})
+  required: z.boolean().default(false).optional(),
+});
 
 export const CheckboxFieldFormElement: FormElement = {
   type,
@@ -60,29 +60,29 @@ export const CheckboxFieldFormElement: FormElement = {
 
   validate: (
     formElement: FormElementInstance,
-    currentValue: string
+    currentValue: string,
   ): boolean => {
-    const element = formElement as CustomInstance
+    const element = formElement as CustomInstance;
     if (element.extraAttributes.required) {
-      return currentValue === "true"
+      return currentValue === "true";
     }
 
-    return true
+    return true;
   },
-}
+};
 
 type CustomInstance = FormElementInstance & {
-  extraAttributes: typeof extraAttributes
-}
+  extraAttributes: typeof extraAttributes;
+};
 
 function DesignerComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance
+  elementInstance: FormElementInstance;
 }) {
-  const element = elementInstance as CustomInstance
-  const { label, required, helperText } = element.extraAttributes
-  const id = `checkbox-${element.id}`
+  const element = elementInstance as CustomInstance;
+  const { label, required, helperText } = element.extraAttributes;
+  const id = `checkbox-${element.id}`;
   return (
     <div className="flex items-top space-x-2">
       <Checkbox id={id} />
@@ -96,7 +96,7 @@ function DesignerComponent({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 function FormComponent({
@@ -105,24 +105,24 @@ function FormComponent({
   isInvalid,
   defaultValue,
 }: {
-  elementInstance: FormElementInstance
-  submitValue?: SubmitFunction
-  isInvalid?: boolean
-  defaultValue?: string
+  elementInstance: FormElementInstance;
+  submitValue?: SubmitFunction;
+  isInvalid?: boolean;
+  defaultValue?: string;
 }) {
-  const element = elementInstance as CustomInstance
+  const element = elementInstance as CustomInstance;
 
   const [value, setValue] = useState<boolean>(
-    defaultValue === "true" ? true : false
-  )
-  const [error, setError] = useState(false)
+    defaultValue === "true" ? true : false,
+  );
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    setError(isInvalid === true)
-  }, [isInvalid])
+    setError(isInvalid === true);
+  }, [isInvalid]);
 
-  const { label, required, placeHolder, helperText } = element.extraAttributes
-  const id = `checkbox-${element.id}`
+  const { label, required, placeHolder, helperText } = element.extraAttributes;
+  const id = `checkbox-${element.id}`;
   return (
     <div className="flex items-top space-x-2">
       <Checkbox
@@ -130,15 +130,15 @@ function FormComponent({
         checked={value}
         className={cn(error && "border-red-500")}
         onCheckedChange={(checked) => {
-          let value = false
-          if (checked === true) value = true
+          let value = false;
+          if (checked === true) value = true;
 
-          setValue(value)
-          if (!submitValue) return
-          const stringValue = value ? "true" : "false"
-          const valid = CheckboxFieldFormElement.validate(element, stringValue)
-          setError(!valid)
-          submitValue(element.id, stringValue)
+          setValue(value);
+          if (!submitValue) return;
+          const stringValue = value ? "true" : "false";
+          const valid = CheckboxFieldFormElement.validate(element, stringValue);
+          setError(!valid);
+          submitValue(element.id, stringValue);
         }}
       />
       <div className="grid gap-1.5 leading-none">
@@ -150,7 +150,7 @@ function FormComponent({
           <p
             className={cn(
               "text-muted-foreground text-[0.8rem]",
-              error && "text-red-500"
+              error && "text-red-500",
             )}
           >
             {helperText}
@@ -158,17 +158,17 @@ function FormComponent({
         )}
       </div>
     </div>
-  )
+  );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance
+  elementInstance: FormElementInstance;
 }) {
-  const element = elementInstance as CustomInstance
-  const { updateElement } = useDesigner()
+  const element = elementInstance as CustomInstance;
+  const { updateElement } = useDesigner();
   const form = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onBlur",
@@ -177,14 +177,14 @@ function PropertiesComponent({
       helperText: element.extraAttributes.helperText,
       required: element.extraAttributes.required,
     },
-  })
+  });
 
   useEffect(() => {
-    form.reset(element.extraAttributes)
-  }, [element, form])
+    form.reset(element.extraAttributes);
+  }, [element, form]);
 
   function applyChanges(values: propertiesFormSchemaType) {
-    const { label, helperText, required } = values
+    const { label, helperText, required } = values;
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -192,7 +192,7 @@ function PropertiesComponent({
         helperText,
         required,
       },
-    })
+    });
   }
 
   return (
@@ -200,7 +200,7 @@ function PropertiesComponent({
       <form
         onBlur={form.handleSubmit(applyChanges)}
         onSubmit={(e) => {
-          e.preventDefault()
+          e.preventDefault();
         }}
         className="space-y-3"
       >
@@ -214,7 +214,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -236,7 +236,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -272,5 +272,5 @@ function PropertiesComponent({
         />
       </form>
     </Form>
-  )
+  );
 }

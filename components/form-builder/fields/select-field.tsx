@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai"
-import { RxDropdownMenu } from "react-icons/rx"
-import { z } from "zod"
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
+import { RxDropdownMenu } from "react-icons/rx";
+import { z } from "zod";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,29 +17,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
-import { toast } from "@/components/ui/use-toast"
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "@/components/ui/use-toast";
 
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
   SubmitFunction,
-} from "../elements"
-import useDesigner from "../hooks/useDesigner"
+} from "../elements";
+import useDesigner from "../hooks/useDesigner";
 
-const type: ElementsType = "SelectField"
+const type: ElementsType = "SelectField";
 
 const extraAttributes = {
   label: "Select field",
@@ -47,15 +47,15 @@ const extraAttributes = {
   required: false,
   placeHolder: "Value here...",
   options: [],
-}
+};
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
-  required: z.boolean().default(false),
+  required: z.boolean().default(false).optional(),
   placeHolder: z.string().max(50),
-  options: z.array(z.string()).default([]),
-})
+  options: z.array(z.string()).default([]).optional(),
+});
 
 export const SelectFieldFormElement: FormElement = {
   type,
@@ -74,28 +74,28 @@ export const SelectFieldFormElement: FormElement = {
 
   validate: (
     formElement: FormElementInstance,
-    currentValue: string
+    currentValue: string,
   ): boolean => {
-    const element = formElement as CustomInstance
+    const element = formElement as CustomInstance;
     if (element.extraAttributes.required) {
-      return currentValue.length > 0
+      return currentValue.length > 0;
     }
 
-    return true
+    return true;
   },
-}
+};
 
 type CustomInstance = FormElementInstance & {
-  extraAttributes: typeof extraAttributes
-}
+  extraAttributes: typeof extraAttributes;
+};
 
 function DesignerComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance
+  elementInstance: FormElementInstance;
 }) {
-  const element = elementInstance as CustomInstance
-  const { label, required, placeHolder, helperText } = element.extraAttributes
+  const element = elementInstance as CustomInstance;
+  const { label, required, placeHolder, helperText } = element.extraAttributes;
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label>
@@ -111,7 +111,7 @@ function DesignerComponent({
         <p className="text-muted-foreground text-[0.8rem]">{helperText}</p>
       )}
     </div>
-  )
+  );
 }
 
 function FormComponent({
@@ -120,22 +120,22 @@ function FormComponent({
   isInvalid,
   defaultValue,
 }: {
-  elementInstance: FormElementInstance
-  submitValue?: SubmitFunction
-  isInvalid?: boolean
-  defaultValue?: string
+  elementInstance: FormElementInstance;
+  submitValue?: SubmitFunction;
+  isInvalid?: boolean;
+  defaultValue?: string;
 }) {
-  const element = elementInstance as CustomInstance
+  const element = elementInstance as CustomInstance;
 
-  const [value, setValue] = useState(defaultValue || "")
-  const [error, setError] = useState(false)
+  const [value, setValue] = useState(defaultValue || "");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    setError(isInvalid === true)
-  }, [isInvalid])
+    setError(isInvalid === true);
+  }, [isInvalid]);
 
   const { label, required, placeHolder, helperText, options } =
-    element.extraAttributes
+    element.extraAttributes;
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label className={cn(error && "text-red-500")}>
@@ -145,11 +145,11 @@ function FormComponent({
       <Select
         defaultValue={value}
         onValueChange={(value) => {
-          setValue(value)
-          if (!submitValue) return
-          const valid = SelectFieldFormElement.validate(element, value)
-          setError(!valid)
-          submitValue(element.id, value)
+          setValue(value);
+          if (!submitValue) return;
+          const valid = SelectFieldFormElement.validate(element, value);
+          setError(!valid);
+          submitValue(element.id, value);
         }}
       >
         <SelectTrigger className={cn("w-full", error && "border-red-500")}>
@@ -167,24 +167,24 @@ function FormComponent({
         <p
           className={cn(
             "text-muted-foreground text-[0.8rem]",
-            error && "text-red-500"
+            error && "text-red-500",
           )}
         >
           {helperText}
         </p>
       )}
     </div>
-  )
+  );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance
+  elementInstance: FormElementInstance;
 }) {
-  const element = elementInstance as CustomInstance
-  const { updateElement, setSelectedElement } = useDesigner()
+  const element = elementInstance as CustomInstance;
+  const { updateElement, setSelectedElement } = useDesigner();
   const form = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onSubmit",
@@ -195,14 +195,14 @@ function PropertiesComponent({
       placeHolder: element.extraAttributes.placeHolder,
       options: element.extraAttributes.options,
     },
-  })
+  });
 
   useEffect(() => {
-    form.reset(element.extraAttributes)
-  }, [element, form])
+    form.reset(element.extraAttributes);
+  }, [element, form]);
 
   function applyChanges(values: propertiesFormSchemaType) {
-    const { label, helperText, placeHolder, required, options } = values
+    const { label, helperText, placeHolder, required, options } = values;
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -212,14 +212,14 @@ function PropertiesComponent({
         required,
         options,
       },
-    })
+    });
 
     toast({
       title: "Success",
       description: "Properties saved successfully",
-    })
+    });
 
-    setSelectedElement(null)
+    setSelectedElement(null);
   }
 
   return (
@@ -235,7 +235,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -257,7 +257,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -276,7 +276,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -300,8 +300,11 @@ function PropertiesComponent({
                   variant={"outline"}
                   className="gap-2"
                   onClick={(e) => {
-                    e.preventDefault() // avoid submit
-                    form.setValue("options", field.value.concat("New option"))
+                    e.preventDefault(); // avoid submit
+                    form.setValue(
+                      "options",
+                      (field.value || []).concat("New option"),
+                    );
                   }}
                 >
                   <AiOutlinePlus />
@@ -309,27 +312,29 @@ function PropertiesComponent({
                 </Button>
               </div>
               <div className="flex flex-col gap-2">
-                {form.watch("options").map((option, index) => (
+                {(form.watch("options") || []).map((option, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between gap-1"
                   >
                     <Input
                       placeholder=""
-                      value={option}
+                      value={option || ""}
                       onChange={(e) => {
-                        field.value[index] = e.target.value
-                        field.onChange(field.value)
+                        if (field.value) {
+                          field.value[index] = e.target.value;
+                          field.onChange(field.value);
+                        }
                       }}
                     />
                     <Button
                       variant={"ghost"}
                       size={"icon"}
                       onClick={(e) => {
-                        e.preventDefault()
-                        const newOptions = [...field.value]
-                        newOptions.splice(index, 1)
-                        field.onChange(newOptions)
+                        e.preventDefault();
+                        const newOptions = [...(field.value || [])];
+                        newOptions.splice(index, 1);
+                        field.onChange(newOptions);
                       }}
                     >
                       <AiOutlineClose />
@@ -375,5 +380,5 @@ function PropertiesComponent({
         </Button>
       </form>
     </Form>
-  )
+  );
 }

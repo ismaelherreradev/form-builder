@@ -43,7 +43,7 @@ const extraAttributes = {
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
-  required: z.boolean().default(false),
+  required: z.boolean().default(false).optional(),
   placeHolder: z.string().max(50),
   rows: z.number().min(1).max(10),
 })

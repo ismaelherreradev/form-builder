@@ -26,6 +26,7 @@ import {
   FormElementInstance,
   SubmitFunction,
 } from "../elements"
+import { createEnhancedElement } from "../utils/element-helpers"
 import useDesigner from "../hooks/useDesigner"
 
 const type: ElementsType = "TextField"
@@ -40,21 +41,17 @@ const extraAttributes = {
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
-  required: z.boolean().default(false),
+  required: z.boolean().default(false).optional(),
   placeHolder: z.string().max(50),
 })
 
 export const TextFieldFormElement: FormElement = {
   type,
-  construct: (id: string) => ({
-    id,
-    type,
-    extraAttributes: {
-      label: "Text field",
-      helperText: "Helped text",
-      require: false,
-      placeHolder: "Value here...",
-    },
+  construct: (id: string) => createEnhancedElement(id, type, {
+    label: "Text field",
+    helperText: "Helper text",
+    required: false,
+    placeHolder: "Value here...",
   }),
   designerButtonElement: {
     icon: Type,

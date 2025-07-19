@@ -1,23 +1,26 @@
-import { redirect } from "next/navigation"
-import { UserButton } from "@clerk/nextjs"
-import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation";
+import { getServerSession } from "@/lib/session";
+import { ModeToggle } from "@/components/mode-toggle";
+import { UserMenu } from "@/components/user-menu";
 
-import { ModeToggle } from "@/components/mode-toggle"
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession();
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const { userId } = auth()
-
-  if (!userId) {
-    return redirect("/sign-in")
+  if (!session) {
+    return redirect("/sign-in");
   }
 
   return (
     <main className="flex flex-col min-h-screen min-w-full max-h-screen">
       <nav className="container py-8 flex items-center justify-between">
         <ModeToggle />
-        <UserButton />
+        <UserMenu user={session.user} />
       </nav>
       <section className="flex w-full flex-grow">{children}</section>
     </main>
-  )
+  );
 }

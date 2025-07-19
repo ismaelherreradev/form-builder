@@ -11,23 +11,33 @@ export default function PropertiesFormSidebar() {
   if (!selectedElement) return null
 
   const PropertiesForm = FormElements[selectedElement?.type].propertiesComponent
+  const elementInfo = FormElements[selectedElement.type].designerButtonElement
 
   return (
-    <div className="flex flex-col p-2">
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-foreground/70">Element properties</p>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <elementInfo.icon className="h-5 w-5 text-primary" />
+          <div>
+            <h3 className="text-sm font-semibold text-foreground">
+              {elementInfo.label}
+            </h3>
+            <p className="text-xs text-muted-foreground">Configure properties</p>
+          </div>
+        </div>
         <Button
-          size={"icon"}
-          variant={"ghost"}
-          onClick={() => {
-            setSelectedElement(null)
-          }}
+          size="sm"
+          variant="ghost"
+          onClick={() => setSelectedElement(null)}
+          aria-label="Close properties panel"
         >
-          <X />
+          <X className="h-4 w-4" />
         </Button>
       </div>
-      <Separator className="mb-4" />
-      <PropertiesForm elementInstance={selectedElement} />
+      <Separator />
+      <div className="space-y-4">
+        <PropertiesForm elementInstance={selectedElement} />
+      </div>
     </div>
   )
 }

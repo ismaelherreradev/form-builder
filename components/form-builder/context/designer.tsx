@@ -1,18 +1,19 @@
 "use client"
 
-import { createContext, Dispatch, SetStateAction, useState } from "react"
+import { createContext, useCallback, useMemo } from "react"
 import { useImmer } from "use-immer"
 
 import { FormElementInstance } from "../elements"
 
 type DesignerContextType = {
   elements: FormElementInstance[]
+  setElements: (elements: FormElementInstance[]) => void
   addElement: (index: number, element: FormElementInstance) => void
-  setElements: Dispatch<SetStateAction<FormElementInstance[]>>
   removeElement: (id: string) => void
   updateElement: (id: string, element: FormElementInstance) => void
   selectedElement: FormElementInstance | null
-  setSelectedElement: Dispatch<SetStateAction<FormElementInstance | null>>
+  setSelectedElement: (element: FormElementInstance | null) => void
+  clearElements: () => void
 }
 
 export const DesignerContext = createContext<DesignerContextType | null>(null)
@@ -22,44 +23,59 @@ export default function DesignerContextProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [elements, setElements] = useImmer<FormElementInstance[]>([])
+  const [elements, updateElements] = useImmer<FormElementInstance[]>([])
+  const [selectedElement, setSelectedElement] = useImmer<FormElementInstance | null>(null)
 
-  const [selectedElement, setSelectedElement] =
-    useImmer<FormElementInstance | null>(null)
+  const setElements = useCallback((newElements: FormElementInstance[]) => {
+    updateElements(newElements)
+  }, [updateElements])
 
-  const addElement = (index: number, element: FormElementInstance) => {
-    setElements((elements: FormElementInstance[]) => {
-      const newElements = [...elements]
-      newElements.splice(index, 0, element)
-      return newElements
+  const addElement = useCallback((index: number, element: FormElementInstance) => {
+    updateElements((draft) => {
+      draft.splice(index, 0, element)
     })
-  }
+  }, [updateElements])
 
-  const removeElement = (id: string) => {
-    setElements((prev) => prev.filter((element) => element.id !== id))
-  }
-
-  const updateElement = (id: string, element: FormElementInstance) => {
-    setElements((prev) => {
-      const newElements = [...prev]
-      const index = newElements.findIndex((el) => el.id === id)
-      newElements[index] = element
-      return newElements
+  const removeElement = useCallback((id: string) => {
+    updateElements((draft) => {
+      const index = draft.findIndex((el) => el.id === id)
+      if (index !== -1) {
+        draft.splice(index, 1)
+      }
     })
-  }
+    // Clear selection if the selected element is being removed
+    setSelectedElement((current) => current?.id === id ? null : current)
+  }, [updateElements, setSelectedElement])
+
+  const updateElement = useCallback((id: string, element: FormElementInstance) => {
+    updateElements((draft) => {
+      const index = draft.findIndex((el) => el.id === id)
+      if (index !== -1) {
+        draft[index] = element
+      }
+    })
+    // Update selection if the selected element is being updated
+    setSelectedElement((current) => current?.id === id ? element : current)
+  }, [updateElements, setSelectedElement])
+
+  const clearElements = useCallback(() => {
+    updateElements([])
+    setSelectedElement(null)
+  }, [updateElements, setSelectedElement])
+
+  const contextValue = useMemo(() => ({
+    elements,
+    setElements,
+    addElement,
+    removeElement,
+    updateElement,
+    selectedElement,
+    setSelectedElement,
+    clearElements,
+  }), [elements, setElements, addElement, removeElement, updateElement, selectedElement, setSelectedElement, clearElements])
 
   return (
-    <DesignerContext.Provider
-      value={{
-        elements,
-        addElement,
-        setElements,
-        removeElement,
-        updateElement,
-        selectedElement,
-        setSelectedElement,
-      }}
-    >
+    <DesignerContext.Provider value={contextValue}>
       {children}
     </DesignerContext.Provider>
   )

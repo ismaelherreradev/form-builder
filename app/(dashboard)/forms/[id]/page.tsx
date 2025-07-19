@@ -1,15 +1,15 @@
-import { ReactNode, Suspense } from "react"
-import { GetFormById, GetFormWithSubmissions } from "@/actions/form"
-import { format, formatDistance } from "date-fns"
+import { ReactNode, Suspense } from "react";
+import { GetFormById, GetFormWithSubmissions } from "@/actions/form";
+import { format, formatDistance } from "date-fns";
 import {
   Badge,
   Eye,
   GanttChartSquare,
   MousePointerClick,
   TrendingDown,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -17,34 +17,38 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import CardStartsWrapper from "@/components/card-starts-wrapper"
-import FormBuilder from "@/components/form-builder/builder"
+} from "@/components/ui/table";
+import CardStartsWrapper from "@/components/card-starts-wrapper";
+import FormBuilder from "@/components/form-builder/builder";
 import {
   ElementsType,
   FormElementInstance,
-} from "@/components/form-builder/elements"
-import FormLinkShare from "@/components/form-builder/share-botton"
-import VisitButton from "@/components/form-builder/visit-botton"
-import { StatsCard, StatsCards } from "@/components/stats-card"
+} from "@/components/form-builder/elements";
+import FormLinkShare from "@/components/form-builder/share-botton";
+import VisitButton from "@/components/form-builder/visit-botton";
+import { StatsCard, StatsCards } from "@/components/stats-card";
 
-export default async function FormPage({ params }: { params: { id: string } }) {
-  const { id } = params
-  const form = await GetFormById(Number(id))
+export default async function FormPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const form = await GetFormById(Number(id));
 
   if (!form) {
-    throw new Error("form not found")
+    throw new Error("form not found");
   }
 
-  const { visits, submissions } = form
+  const { visits, submissions } = form;
 
-  let submissionRate = 0
+  let submissionRate = 0;
 
   if (visits > 0) {
-    submissionRate = (submissions / visits) * 100
+    submissionRate = (submissions / visits) * 100;
   }
 
-  const bounceRate = 100 - submissionRate
+  const bounceRate = 100 - submissionRate;
 
   return (
     <>
@@ -75,27 +79,27 @@ export default async function FormPage({ params }: { params: { id: string } }) {
         <SubmissionsTable id={form.id} />
       </div>
     </>
-  )
+  );
 }
 
 type Row = { [key: string]: string } & {
-  submittedAt: Date
-}
+  submittedAt: Date;
+};
 
 async function SubmissionsTable({ id }: { id: number }) {
-  const form = await GetFormWithSubmissions(id)
+  const form = await GetFormWithSubmissions(id);
 
   if (!form) {
-    throw new Error("form not found")
+    throw new Error("form not found");
   }
 
-  const formElements = JSON.parse(form.content) as FormElementInstance[]
+  const formElements = JSON.parse(form.content) as FormElementInstance[];
   const columns: {
-    id: string
-    label: string
-    required: boolean
-    type: ElementsType
-  }[] = []
+    id: string;
+    label: string;
+    required: boolean;
+    type: ElementsType;
+  }[] = [];
 
   formElements.forEach((element) => {
     switch (element.type) {
@@ -105,21 +109,21 @@ async function SubmissionsTable({ id }: { id: number }) {
           label: element.extraAttributes?.label,
           required: element.extraAttributes?.required,
           type: element.type,
-        })
-        break
+        });
+        break;
       default:
-        break
+        break;
     }
-  })
+  });
 
-  const rows: Row[] = []
+  const rows: Row[] = [];
   form.FormSubmissions.forEach((submission) => {
-    const content = JSON.parse(submission.content)
+    const content = JSON.parse(submission.content);
     rows.push({
       ...content,
       submittedAt: submission.createdAt,
-    })
-  })
+    });
+  });
 
   return (
     <>
@@ -159,11 +163,11 @@ async function SubmissionsTable({ id }: { id: number }) {
         </Table>
       </div>
     </>
-  )
+  );
 }
 
 function RowCell({ type, value }: { type: ElementsType; value: string }) {
-  let node: ReactNode = value
+  let node: ReactNode = value;
 
   // switch (type) {
   //   case "DateField":
@@ -177,5 +181,5 @@ function RowCell({ type, value }: { type: ElementsType; value: string }) {
   //     break
   // }
 
-  return <TableCell>{node}</TableCell>
+  return <TableCell>{node}</TableCell>;
 }

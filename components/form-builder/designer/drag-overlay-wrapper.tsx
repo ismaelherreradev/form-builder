@@ -5,6 +5,7 @@ import { Active, DragOverlay, useDndMonitor } from "@dnd-kit/core"
 
 import { ElementsType, FormElements } from "../elements"
 import useDesigner from "../hooks/useDesigner"
+import { EnhancedDragOverlayWrapper } from "../enhanced/drag-preview"
 import { DesignerSidebarButtonElementsDragOverlay } from "./buttons-elements"
 
 export default function DragOverlayWrapper() {
@@ -32,9 +33,11 @@ export default function DragOverlayWrapper() {
   if (isDesignerButtonElement) {
     const type = draggedItem.data?.current?.type as ElementsType
     node = (
-      <DesignerSidebarButtonElementsDragOverlay
-        formElement={FormElements[type]}
-      />
+      <EnhancedDragOverlayWrapper>
+        <DesignerSidebarButtonElementsDragOverlay
+          formElement={FormElements[type]}
+        />
+      </EnhancedDragOverlayWrapper>
     )
   }
 
@@ -48,9 +51,11 @@ export default function DragOverlayWrapper() {
         FormElements[element.type].designerComponent
 
       node = (
-        <div className="flex bg-accent border rounded-md h-[120px] w-full py-2 px-4 opacity-80 pointer pointer-events-none">
-          <DesignerElementComponent elementInstance={element} />
-        </div>
+        <EnhancedDragOverlayWrapper>
+          <div className="flex bg-accent border rounded-md h-[120px] w-full py-2 px-4 opacity-80 pointer pointer-events-none">
+            <DesignerElementComponent elementInstance={element} />
+          </div>
+        </EnhancedDragOverlayWrapper>
       )
     }
   }

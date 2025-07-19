@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -18,37 +18,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Switch } from "@/components/ui/switch"
+} from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
   SubmitFunction,
-} from "../elements"
-import useDesigner from "../hooks/useDesigner"
+} from "../elements";
+import useDesigner from "../hooks/useDesigner";
 
-const type: ElementsType = "DateField"
+const type: ElementsType = "DateField";
 
 const extraAttributes = {
   label: "Date field",
   helperText: "Pick a date",
   required: false,
-}
+};
 
 const propertiesSchema = z.object({
   label: z.string().min(2).max(50),
   helperText: z.string().max(200),
-  required: z.boolean().default(false),
-})
+  required: z.boolean().default(false).optional(),
+});
 
 export const DateFieldFormElement: FormElement = {
   type,
@@ -67,28 +67,28 @@ export const DateFieldFormElement: FormElement = {
 
   validate: (
     formElement: FormElementInstance,
-    currentValue: string
+    currentValue: string,
   ): boolean => {
-    const element = formElement as CustomInstance
+    const element = formElement as CustomInstance;
     if (element.extraAttributes.required) {
-      return currentValue.length > 0
+      return currentValue.length > 0;
     }
 
-    return true
+    return true;
   },
-}
+};
 
 type CustomInstance = FormElementInstance & {
-  extraAttributes: typeof extraAttributes
-}
+  extraAttributes: typeof extraAttributes;
+};
 
 function DesignerComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance
+  elementInstance: FormElementInstance;
 }) {
-  const element = elementInstance as CustomInstance
-  const { label, required, placeHolder, helperText } = element.extraAttributes
+  const element = elementInstance as CustomInstance;
+  const { label, required, placeHolder, helperText } = element.extraAttributes;
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label>
@@ -106,7 +106,7 @@ function DesignerComponent({
         <p className="text-muted-foreground text-[0.8rem]">{helperText}</p>
       )}
     </div>
-  )
+  );
 }
 
 function FormComponent({
@@ -115,24 +115,24 @@ function FormComponent({
   isInvalid,
   defaultValue,
 }: {
-  elementInstance: FormElementInstance
-  submitValue?: SubmitFunction
-  isInvalid?: boolean
-  defaultValue?: string
+  elementInstance: FormElementInstance;
+  submitValue?: SubmitFunction;
+  isInvalid?: boolean;
+  defaultValue?: string;
 }) {
-  const element = elementInstance as CustomInstance
+  const element = elementInstance as CustomInstance;
 
   const [date, setDate] = useState<Date | undefined>(
-    defaultValue ? new Date(defaultValue) : undefined
-  )
+    defaultValue ? new Date(defaultValue) : undefined,
+  );
 
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    setError(isInvalid === true)
-  }, [isInvalid])
+    setError(isInvalid === true);
+  }, [isInvalid]);
 
-  const { label, required, placeHolder, helperText } = element.extraAttributes
+  const { label, required, placeHolder, helperText } = element.extraAttributes;
   return (
     <div className="flex flex-col gap-2 w-full">
       <Label className={cn(error && "text-red-500")}>
@@ -146,7 +146,7 @@ function FormComponent({
             className={cn(
               "w-full justify-start text-left font-normal",
               !date && "text-muted-foreground",
-              error && "border-red-500"
+              error && "border-red-500",
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -158,13 +158,13 @@ function FormComponent({
             mode="single"
             selected={date}
             onSelect={(date) => {
-              setDate(date)
+              setDate(date);
 
-              if (!submitValue) return
-              const value = date?.toUTCString() || ""
-              const valid = DateFieldFormElement.validate(element, value)
-              setError(!valid)
-              submitValue(element.id, value)
+              if (!submitValue) return;
+              const value = date?.toUTCString() || "";
+              const valid = DateFieldFormElement.validate(element, value);
+              setError(!valid);
+              submitValue(element.id, value);
             }}
           />
         </PopoverContent>
@@ -173,24 +173,24 @@ function FormComponent({
         <p
           className={cn(
             "text-muted-foreground text-[0.8rem]",
-            error && "text-red-500"
+            error && "text-red-500",
           )}
         >
           {helperText}
         </p>
       )}
     </div>
-  )
+  );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance
+  elementInstance: FormElementInstance;
 }) {
-  const element = elementInstance as CustomInstance
-  const { updateElement } = useDesigner()
+  const element = elementInstance as CustomInstance;
+  const { updateElement } = useDesigner();
   const form = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onBlur",
@@ -199,14 +199,14 @@ function PropertiesComponent({
       helperText: element.extraAttributes.helperText,
       required: element.extraAttributes.required,
     },
-  })
+  });
 
   useEffect(() => {
-    form.reset(element.extraAttributes)
-  }, [element, form])
+    form.reset(element.extraAttributes);
+  }, [element, form]);
 
   function applyChanges(values: propertiesFormSchemaType) {
-    const { label, helperText, required } = values
+    const { label, helperText, required } = values;
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -214,7 +214,7 @@ function PropertiesComponent({
         helperText,
         required,
       },
-    })
+    });
   }
 
   return (
@@ -222,7 +222,7 @@ function PropertiesComponent({
       <form
         onBlur={form.handleSubmit(applyChanges)}
         onSubmit={(e) => {
-          e.preventDefault()
+          e.preventDefault();
         }}
         className="space-y-3"
       >
@@ -236,7 +236,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -258,7 +258,7 @@ function PropertiesComponent({
                 <Input
                   {...field}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur()
+                    if (e.key === "Enter") e.currentTarget.blur();
                   }}
                 />
               </FormControl>
@@ -294,5 +294,5 @@ function PropertiesComponent({
         />
       </form>
     </Form>
-  )
+  );
 }

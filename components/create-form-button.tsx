@@ -35,6 +35,10 @@ export default function CerateFormButton() {
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
   })
 
   async function onSubmit(values: FormSchemaType) {

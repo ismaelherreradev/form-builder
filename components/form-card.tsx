@@ -1,9 +1,9 @@
 import Link from "next/link"
-import { Form } from "@prisma/client"
 import { formatDistance } from "date-fns"
 import { ArrowRightIcon, EyeIcon, GanttChartSquare, Pencil } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { forms } from "@/lib/schema"
 
 import { Button } from "./ui/button"
 import {
@@ -14,6 +14,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card"
+
+type Form = typeof forms.$inferSelect
 
 export default function FormCard({ form }: { form: Form }) {
   return (

@@ -1,73 +1,73 @@
-"use client"
+"use client";
 
-import { useCallback, useRef, useState, useTransition } from "react"
-import { SubmitForm } from "@/actions/form"
-import { Loader2, Send } from "lucide-react"
+import { useCallback, useRef, useState, useTransition } from "react";
+import { SubmitForm } from "@/actions/form";
+import { Loader2, Send } from "lucide-react";
 
-import { Button } from "../ui/button"
-import { toast } from "../ui/use-toast"
-import { FormElementInstance, FormElements } from "./elements"
+import { Button } from "../ui/button";
+import { toast } from "../ui/use-toast";
+import { FormElementInstance, FormElements } from "./elements";
 
 export default function FormSubmitComponent({
   formUrl,
   content,
 }: {
-  content: FormElementInstance[]
-  formUrl: string
+  content: FormElementInstance[];
+  formUrl: string;
 }) {
-  const formValues = useRef<{ [key: string]: string }>({})
-  const formErrors = useRef<{ [key: string]: boolean }>({})
-  const [renderKey, setRenderKey] = useState(new Date().getTime())
+  const formValues = useRef<{ [key: string]: string }>({});
+  const formErrors = useRef<{ [key: string]: boolean }>({});
+  const [renderKey, setRenderKey] = useState(new Date().getTime());
 
-  const [submitted, setSubmitted] = useState(false)
-  const [pending, startTransition] = useTransition()
+  const [submitted, setSubmitted] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   const validateForm: () => boolean = useCallback(() => {
     for (const field of content) {
-      const actualValue = formValues.current[field.id] || ""
-      const valid = FormElements[field.type].validate(field, actualValue)
+      const actualValue = formValues.current[field.id] || "";
+      const valid = FormElements[field.type].validate(field, actualValue);
 
       if (!valid) {
-        formErrors.current[field.id] = true
+        formErrors.current[field.id] = true;
       }
     }
 
     if (Object.keys(formErrors.current).length > 0) {
-      return false
+      return false;
     }
 
-    return true
-  }, [content])
+    return true;
+  }, [content]);
 
   const submitValue = useCallback((key: string, value: string) => {
-    formValues.current[key] = value
-  }, [])
+    formValues.current[key] = value;
+  }, []);
 
   const submitForm = async () => {
-    formErrors.current = {}
-    const validForm = validateForm()
+    formErrors.current = {};
+    const validForm = validateForm();
     if (!validForm) {
-      setRenderKey(new Date().getTime())
+      setRenderKey(new Date().getTime());
       toast({
         title: "Error",
         description: "please check the form for errors",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     try {
-      const jsonContent = JSON.stringify(formValues.current)
-      await SubmitForm(formUrl, jsonContent)
-      setSubmitted(true)
+      const jsonContent = JSON.stringify(formValues.current);
+      await SubmitForm(formUrl, jsonContent);
+      setSubmitted(true);
     } catch (error) {
       toast({
         title: "Error",
         description: "Something went wrong",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   if (submitted) {
     return (
@@ -79,7 +79,7 @@ export default function FormSubmitComponent({
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -89,21 +89,21 @@ export default function FormSubmitComponent({
         className="max-w-[620px] flex flex-col gap-4 flex-grow bg-background w-full p-8 overflow-y-auto border rounded"
       >
         {content.map((element) => {
-          const FormElement = FormElements[element.type].formComponent
+          const FormElement = FormElements[element.type].formComponent;
           return (
             <FormElement
               key={element.id}
               elementInstance={element}
               submitValue={submitValue}
               isInvalid={formErrors.current[element.id]}
-              defaultValue={formValues.current[element.id]}
+              defaultValue={formValues.current[element.id] || ""}
             />
-          )
+          );
         })}
         <Button
           className="mt-8"
           onClick={() => {
-            startTransition(submitForm)
+            startTransition(submitForm);
           }}
           disabled={pending}
         >
@@ -118,5 +118,5 @@ export default function FormSubmitComponent({
         </Button>
       </div>
     </div>
-  )
+  );
 }

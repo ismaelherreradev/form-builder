@@ -9,10 +9,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core"
-import { Form } from "@prisma/client"
 import { ArrowBigLeft, ArrowBigRight, Loader2 } from "lucide-react"
 import Confetti from "react-confetti"
 
+import { forms } from "@/lib/schema"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { toast } from "../ui/use-toast"
@@ -22,6 +22,8 @@ import useDesigner from "./hooks/useDesigner"
 import PreviewFormButton from "./preview-dialog-button"
 import PublishFormButton from "./publish-botton"
 import SaveFormButton from "./save-botton"
+
+type Form = typeof forms.$inferSelect
 
 export default function FormBuilder({ form }: { form: Form }) {
   const { setElements, setSelectedElement } = useDesigner()
